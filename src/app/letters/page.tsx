@@ -57,24 +57,9 @@ export default function LettersPage() {
     if ('speechSynthesis' in window) {
       setIsSpeaking(true);
 
-      // 获取所有可用的语音
-      const voices = window.speechSynthesis.getVoices();
-
-      // 尝试找到英语语音
-      const englishVoice = voices.find(voice =>
-        voice.lang.includes('en') && !voice.lang.includes('GB')
-      );
-
       const utterance = new SpeechSynthesisUtterance(char);
       utterance.lang = 'en-US';
-
-      // 如果找到了英语语音，使用它
-      if (englishVoice) {
-        utterance.voice = englishVoice;
-      }
-
-      // 设置语速和音调，确保字母发音清晰
-      utterance.rate = 0.6; // 更慢的语速
+      utterance.rate = 0.7;
       utterance.pitch = 1.0;
 
       utterance.onend = () => setIsSpeaking(false);
