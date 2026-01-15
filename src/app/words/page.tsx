@@ -30,16 +30,45 @@ export default function WordsPage() {
   // Calculate total words
   const totalWords = wordCategories.reduce((sum, cat) => sum + cat.words.length, 0);
 
-  const speak = (text: string) => {
-    if ('speechSynthesis' in window) {
+  // 使用豆包语音合成服务
+  const speakText = async (text: string) => {
+    if (isSpeaking) return;
+
+    try {
       setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: 'zh_female_vv_uranus_bigtts',
+          speechRate: -10,
+          loudnessRate: 10
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
+    } catch (error) {
+      console.error('Speech error:', error);
+      setIsSpeaking(false);
     }
+  };
+
+  const speak = (text: string) => {
+    speakText(text);
   };
 
   const goToPreviousWord = () => {

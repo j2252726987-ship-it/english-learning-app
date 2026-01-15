@@ -6,9 +6,9 @@ import {
   BookOpen, 
   Mic2, 
   MessageSquare, 
-  PlayCircle,
   Type,
-  Sparkles
+  Sparkles,
+  Trophy
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -51,10 +51,10 @@ export default function Home() {
       iconColor: 'text-orange-600 dark:text-orange-300'
     },
     {
-      title: '启蒙动画',
-      description: '观看趣味动画，在快乐中学习英语',
-      icon: <PlayCircle className="h-12 w-12" />,
-      href: '/cartoons',
+      title: '闯关游戏',
+      description: '无限关卡挑战，在游戏中巩固知识',
+      icon: <Trophy className="h-12 w-12" />,
+      href: '/games',
       color: 'bg-pink-500',
       iconBg: 'bg-pink-100 dark:bg-pink-900',
       iconColor: 'text-pink-600 dark:text-pink-300'
