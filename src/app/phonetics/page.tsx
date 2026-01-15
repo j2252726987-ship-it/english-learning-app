@@ -7,103 +7,158 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Volume2 } from 'lucide-react';
 import Link from 'next/link';
 
+// 音标发音映射表 - 使用英语发音表示模拟音标发音
+const phoneticSoundMap: { [key: string]: string } = {
+  // 单元音
+  '/iː/': 'eee',
+  '/ɪ/': 'ih',
+  '/e/': 'eh',
+  '/æ/': 'ae',
+  '/ɜː/': 'er',
+  '/ə/': 'uh',
+  '/ʌ/': 'u',
+  '/uː/': 'ooo',
+  '/ʊ/': 'oo',
+  '/ɔː/': 'or',
+  '/ɒ/': 'o',
+  '/ɑː/': 'ah',
+  // 双元音
+  '/eɪ/': 'ay',
+  '/aɪ/': 'eye',
+  '/ɔɪ/': 'oy',
+  '/aʊ/': 'ow',
+  '/əʊ/': 'oh',
+  '/ɪə/': 'ear',
+  '/eə/': 'air',
+  '/ʊə/': 'ure',
+  // 清辅音
+  '/p/': 'p',
+  '/t/': 't',
+  '/k/': 'k',
+  '/f/': 'f',
+  '/θ/': 'th',
+  '/s/': 's',
+  '/ʃ/': 'sh',
+  '/h/': 'h',
+  '/tʃ/': 'ch',
+  '/ts/': 'ts',
+  '/tr/': 'tr',
+  // 浊辅音
+  '/b/': 'b',
+  '/d/': 'd',
+  '/g/': 'g',
+  '/v/': 'v',
+  '/ð/': 'the',
+  '/z/': 'z',
+  '/ʒ/': 'si',
+  '/r/': 'r',
+  '/dʒ/': 'j',
+  '/dz/': 'dz',
+  '/dr/': 'dr',
+  '/m/': 'm',
+  '/n/': 'n',
+  '/ŋ/': 'ng',
+  '/l/': 'l',
+  '/w/': 'w',
+  '/j/': 'y',
+};
+
 const vowels = {
   monophthongs: [
-    { symbol: '/iː/', example: 'see', exampleCn: '看见', description: '长元音，像微笑' },
-    { symbol: '/ɪ/', example: 'sit', exampleCn: '坐', description: '短元音，紧张有力' },
-    { symbol: '/e/', example: 'ten', exampleCn: '十', description: '短元音，扁嘴形' },
-    { symbol: '/æ/', example: 'cat', exampleCn: '猫', description: '短元音，大口型' },
-    { symbol: '/ɜː/', example: 'bird', exampleCn: '鸟', description: '长元音，中口型' },
-    { symbol: '/ə/', example: 'about', exampleCn: '关于', description: '弱读音，中性口型' },
-    { symbol: '/ʌ/', example: 'cup', exampleCn: '杯子', description: '短元音，开口笑' },
-    { symbol: '/uː/', example: 'too', exampleCn: '也', description: '长元音，圆唇' },
-    { symbol: '/ʊ/', example: 'put', exampleCn: '放', description: '短元音，短圆唇' },
-    { symbol: '/ɔː/', example: 'door', exampleCn: '门', description: '长元音，大圆唇' },
-    { symbol: '/ɒ/', example: 'hot', exampleCn: '热', description: '短元音，开口大' },
-    { symbol: '/ɑː/', example: 'car', exampleCn: '汽车', description: '长元音，大口型' },
+    { symbol: '/iː/', example: 'see', exampleCn: '看见', description: '长元音，像微笑', sound: phoneticSoundMap['/iː/'] },
+    { symbol: '/ɪ/', example: 'sit', exampleCn: '坐', description: '短元音，紧张有力', sound: phoneticSoundMap['/ɪ/'] },
+    { symbol: '/e/', example: 'ten', exampleCn: '十', description: '短元音，扁嘴形', sound: phoneticSoundMap['/e/'] },
+    { symbol: '/æ/', example: 'cat', exampleCn: '猫', description: '短元音，大口型', sound: phoneticSoundMap['/æ/'] },
+    { symbol: '/ɜː/', example: 'bird', exampleCn: '鸟', description: '长元音，中口型', sound: phoneticSoundMap['/ɜː/'] },
+    { symbol: '/ə/', example: 'about', exampleCn: '关于', description: '弱读音，中性口型', sound: phoneticSoundMap['/ə/'] },
+    { symbol: '/ʌ/', example: 'cup', exampleCn: '杯子', description: '短元音，开口笑', sound: phoneticSoundMap['/ʌ/'] },
+    { symbol: '/uː/', example: 'too', exampleCn: '也', description: '长元音，圆唇', sound: phoneticSoundMap['/uː/'] },
+    { symbol: '/ʊ/', example: 'put', exampleCn: '放', description: '短元音，短圆唇', sound: phoneticSoundMap['/ʊ/'] },
+    { symbol: '/ɔː/', example: 'door', exampleCn: '门', description: '长元音，大圆唇', sound: phoneticSoundMap['/ɔː/'] },
+    { symbol: '/ɒ/', example: 'hot', exampleCn: '热', description: '短元音，开口大', sound: phoneticSoundMap['/ɒ/'] },
+    { symbol: '/ɑː/', example: 'car', exampleCn: '汽车', description: '长元音，大口型', sound: phoneticSoundMap['/ɑː/'] },
   ],
   diphthongs: [
-    { symbol: '/eɪ/', example: 'face', exampleCn: '脸', description: '双元音，从e到i' },
-    { symbol: '/aɪ/', example: 'like', exampleCn: '喜欢', description: '双元音，从a到i' },
-    { symbol: '/ɔɪ/', example: 'boy', exampleCn: '男孩', description: '双元音，从o到i' },
-    { symbol: '/aʊ/', example: 'mouse', exampleCn: '老鼠', description: '双元音，从a到u' },
-    { symbol: '/əʊ/', example: 'go', exampleCn: '去', description: '双元音，从o到u' },
-    { symbol: '/ɪə/', example: 'ear', exampleCn: '耳朵', description: '双元音，从i到e' },
-    { symbol: '/eə/', example: 'air', exampleCn: '空气', description: '双元音，从e到e' },
-    { symbol: '/ʊə/', example: 'pure', exampleCn: '纯粹的', description: '双元音，从u到e' },
+    { symbol: '/eɪ/', example: 'face', exampleCn: '脸', description: '双元音，从e到i', sound: phoneticSoundMap['/eɪ/'] },
+    { symbol: '/aɪ/', example: 'like', exampleCn: '喜欢', description: '双元音，从a到i', sound: phoneticSoundMap['/aɪ/'] },
+    { symbol: '/ɔɪ/', example: 'boy', exampleCn: '男孩', description: '双元音，从o到i', sound: phoneticSoundMap['/ɔɪ/'] },
+    { symbol: '/aʊ/', example: 'mouse', exampleCn: '老鼠', description: '双元音，从a到u', sound: phoneticSoundMap['/aʊ/'] },
+    { symbol: '/əʊ/', example: 'go', exampleCn: '去', description: '双元音，从o到u', sound: phoneticSoundMap['/əʊ/'] },
+    { symbol: '/ɪə/', example: 'ear', exampleCn: '耳朵', description: '双元音，从i到e', sound: phoneticSoundMap['/ɪə/'] },
+    { symbol: '/eə/', example: 'air', exampleCn: '空气', description: '双元音，从e到e', sound: phoneticSoundMap['/eə/'] },
+    { symbol: '/ʊə/', example: 'pure', exampleCn: '纯粹的', description: '双元音，从u到e', sound: phoneticSoundMap['/ʊə/'] },
   ]
 };
 
 const consonants = {
   voiceless: [
-    { symbol: '/p/', example: 'pen', exampleCn: '钢笔', description: '清辅音，送气强' },
-    { symbol: '/t/', example: 'tea', exampleCn: '茶', description: '清辅音，舌尖抵齿龈' },
-    { symbol: '/k/', example: 'key', exampleCn: '钥匙', description: '清辅音，后舌抬起' },
-    { symbol: '/f/', example: 'fish', exampleCn: '鱼', description: '清辅音，上齿咬下唇' },
-    { symbol: '/θ/', example: 'think', exampleCn: '思考', description: '清辅音，舌尖轻触齿' },
-    { symbol: '/s/', example: 'sun', exampleCn: '太阳', description: '清辅音，舌端靠近齿龈' },
-    { symbol: '/ʃ/', example: 'she', exampleCn: '她', description: '清辅音，双唇突出' },
-    { symbol: '/h/', example: 'hot', exampleCn: '热', description: '清辅音，声门摩擦' },
-    { symbol: '/tʃ/', example: 'chair', exampleCn: '椅子', description: '清辅音，舌尖卷起' },
-    { symbol: '/ts/', example: 'cats', exampleCn: '猫们', description: '清辅音，齿龈破擦音' },
-    { symbol: '/tr/', example: 'tree', exampleCn: '树', description: '清辅音，齿龈后塞擦' },
+    { symbol: '/p/', example: 'pen', exampleCn: '钢笔', description: '清辅音，送气强', sound: phoneticSoundMap['/p/'] },
+    { symbol: '/t/', example: 'tea', exampleCn: '茶', description: '清辅音，舌尖抵齿龈', sound: phoneticSoundMap['/t/'] },
+    { symbol: '/k/', example: 'key', exampleCn: '钥匙', description: '清辅音，后舌抬起', sound: phoneticSoundMap['/k/'] },
+    { symbol: '/f/', example: 'fish', exampleCn: '鱼', description: '清辅音，上齿咬下唇', sound: phoneticSoundMap['/f/'] },
+    { symbol: '/θ/', example: 'think', exampleCn: '思考', description: '清辅音，舌尖轻触齿', sound: phoneticSoundMap['/θ/'] },
+    { symbol: '/s/', example: 'sun', exampleCn: '太阳', description: '清辅音，舌端靠近齿龈', sound: phoneticSoundMap['/s/'] },
+    { symbol: '/ʃ/', example: 'she', exampleCn: '她', description: '清辅音，双唇突出', sound: phoneticSoundMap['/ʃ/'] },
+    { symbol: '/h/', example: 'hot', exampleCn: '热', description: '清辅音，声门摩擦', sound: phoneticSoundMap['/h/'] },
+    { symbol: '/tʃ/', example: 'chair', exampleCn: '椅子', description: '清辅音，舌尖卷起', sound: phoneticSoundMap['/tʃ/'] },
+    { symbol: '/ts/', example: 'cats', exampleCn: '猫们', description: '清辅音，齿龈破擦音', sound: phoneticSoundMap['/ts/'] },
+    { symbol: '/tr/', example: 'tree', exampleCn: '树', description: '清辅音，齿龈后塞擦', sound: phoneticSoundMap['/tr/'] },
   ],
   voiced: [
-    { symbol: '/b/', example: 'book', exampleCn: '书', description: '浊辅音，双唇闭' },
-    { symbol: '/d/', example: 'dog', exampleCn: '狗', description: '浊辅音，舌尖抵齿龈' },
-    { symbol: '/g/', example: 'girl', exampleCn: '女孩', description: '浊辅音，后舌抬起' },
-    { symbol: '/v/', example: 'very', exampleCn: '非常', description: '浊辅音，上齿咬下唇' },
-    { symbol: '/ð/', example: 'this', exampleCn: '这个', description: '浊辅音，舌尖轻触齿' },
-    { symbol: '/z/', example: 'zoo', exampleCn: '动物园', description: '浊辅音，舌端靠近齿龈' },
-    { symbol: '/ʒ/', example: 'measure', exampleCn: '测量', description: '浊辅音，双唇突出' },
-    { symbol: '/r/', example: 'red', exampleCn: '红色', description: '浊辅音，舌尖卷起' },
-    { symbol: '/dʒ/', example: 'jam', exampleCn: '果酱', description: '浊辅音，舌尖卷起' },
-    { symbol: '/dz/', example: 'beds', exampleCn: '床们', description: '浊辅音，齿龈破擦音' },
-    { symbol: '/dr/', example: 'drive', exampleCn: '驾驶', description: '浊辅音，齿龈后塞擦' },
-    { symbol: '/m/', example: 'mother', exampleCn: '母亲', description: '浊辅音，双唇闭' },
-    { symbol: '/n/', example: 'name', exampleCn: '名字', description: '浊辅音，舌尖抵齿龈' },
-    { symbol: '/ŋ/', example: 'sing', exampleCn: '唱歌', description: '浊辅音，舌后抵软腭' },
-    { symbol: '/l/', example: 'love', exampleCn: '爱', description: '浊辅音，舌尖抵齿龈' },
-    { symbol: '/w/', example: 'water', exampleCn: '水', description: '浊辅音，双唇圆' },
-    { symbol: '/j/', example: 'yes', exampleCn: '是', description: '浊辅音，舌前部抬起' },
+    { symbol: '/b/', example: 'book', exampleCn: '书', description: '浊辅音，双唇闭', sound: phoneticSoundMap['/b/'] },
+    { symbol: '/d/', example: 'dog', exampleCn: '狗', description: '浊辅音，舌尖抵齿龈', sound: phoneticSoundMap['/d/'] },
+    { symbol: '/g/', example: 'girl', exampleCn: '女孩', description: '浊辅音，后舌抬起', sound: phoneticSoundMap['/g/'] },
+    { symbol: '/v/', example: 'very', exampleCn: '非常', description: '浊辅音，上齿咬下唇', sound: phoneticSoundMap['/v/'] },
+    { symbol: '/ð/', example: 'this', exampleCn: '这个', description: '浊辅音，舌尖轻触齿', sound: phoneticSoundMap['/ð/'] },
+    { symbol: '/z/', example: 'zoo', exampleCn: '动物园', description: '浊辅音，舌端靠近齿龈', sound: phoneticSoundMap['/z/'] },
+    { symbol: '/ʒ/', example: 'measure', exampleCn: '测量', description: '浊辅音，双唇突出', sound: phoneticSoundMap['/ʒ/'] },
+    { symbol: '/r/', example: 'red', exampleCn: '红色', description: '浊辅音，舌尖卷起', sound: phoneticSoundMap['/r/'] },
+    { symbol: '/dʒ/', example: 'jam', exampleCn: '果酱', description: '浊辅音，舌尖卷起', sound: phoneticSoundMap['/dʒ/'] },
+    { symbol: '/dz/', example: 'beds', exampleCn: '床们', description: '浊辅音，齿龈破擦音', sound: phoneticSoundMap['/dz/'] },
+    { symbol: '/dr/', example: 'drive', exampleCn: '驾驶', description: '浊辅音，齿龈后塞擦', sound: phoneticSoundMap['/dr/'] },
+    { symbol: '/m/', example: 'mother', exampleCn: '母亲', description: '浊辅音，双唇闭', sound: phoneticSoundMap['/m/'] },
+    { symbol: '/n/', example: 'name', exampleCn: '名字', description: '浊辅音，舌尖抵齿龈', sound: phoneticSoundMap['/n/'] },
+    { symbol: '/ŋ/', example: 'sing', exampleCn: '唱歌', description: '浊辅音，舌后抵软腭', sound: phoneticSoundMap['/ŋ/'] },
+    { symbol: '/l/', example: 'love', exampleCn: '爱', description: '浊辅音，舌尖抵齿龈', sound: phoneticSoundMap['/l/'] },
+    { symbol: '/w/', example: 'water', exampleCn: '水', description: '浊辅音，双唇圆', sound: phoneticSoundMap['/w/'] },
+    { symbol: '/j/', example: 'yes', exampleCn: '是', description: '浊辅音，舌前部抬起', sound: phoneticSoundMap['/j/'] },
   ]
 };
 
 export default function PhoneticsPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
+  const speakPhoneticSound = (sound: string) => {
+    if ('speechSynthesis' in window) {
+      setIsSpeaking(true);
+
+      // 播放音标本身的发音表示
+      const utterance = new SpeechSynthesisUtterance(sound);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.7;
+      utterance.pitch = 1.0;
+
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const speakPhonetic = (word: string) => {
     if ('speechSynthesis' in window) {
       setIsSpeaking(true);
 
-      // 播放示例单词两次，使用较慢的语速确保音标发音清晰
-      const utterance1 = new SpeechSynthesisUtterance(word);
-      utterance1.lang = 'en-US';
-      utterance1.rate = 0.6; // 更慢的语速，方便听清音标
-      utterance1.pitch = 1.0;
+      // 播放示例单词，使用较慢的语速确保音标发音清晰
+      const utterance = new SpeechSynthesisUtterance(word);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.7; // 更慢的语速，方便听清音标
+      utterance.pitch = 1.0;
 
-      const utterance2 = new SpeechSynthesisUtterance(word);
-      utterance2.lang = 'en-US';
-      utterance2.rate = 0.6;
-      utterance2.pitch = 1.0;
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
 
-      let count = 0;
-      const checkEnd = () => {
-        count++;
-        if (count >= 2) {
-          setIsSpeaking(false);
-        }
-      };
-
-      utterance1.onend = checkEnd;
-      utterance1.onerror = checkEnd;
-      utterance2.onend = checkEnd;
-      utterance2.onerror = checkEnd;
-
-      window.speechSynthesis.speak(utterance1);
-      setTimeout(() => {
-        window.speechSynthesis.speak(utterance2);
-      }, 1000); // 间隔1秒播放第二次
+      window.speechSynthesis.speak(utterance);
     }
   };
 
@@ -114,15 +169,16 @@ export default function PhoneticsPage() {
   const renderPhoneticCard = (item: any, index: number) => (
     <Card key={index} className="hover:shadow-xl transition-shadow">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-2">
           <CardTitle className="text-3xl font-bold text-primary">
             {item.symbol}
           </CardTitle>
           <Button
             size="sm"
             variant="ghost"
-            onClick={() => speak(item.example)}
+            onClick={() => speakPhoneticSound(item.sound)}
             disabled={isSpeaking}
+            title="播放音标发音"
           >
             <Volume2 className="h-4 w-4" />
           </Button>
@@ -160,8 +216,10 @@ export default function PhoneticsPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             音标学习
           </h1>
-          <p className="text-muted-foreground">48个国际音标，点击喇叭听示例单词的标准发音</p>
-          <p className="text-sm text-muted-foreground mt-2">💡 音标发音通过示例单词体现，请仔细聆听</p>
+          <p className="text-muted-foreground">48个国际音标，双喇叭系统</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            🔵 音标旁喇叭：播放音标本身的发音 | 🔵 示例词旁喇叭：播放完整单词发音
+          </p>
         </div>
 
         {/* Content */}
