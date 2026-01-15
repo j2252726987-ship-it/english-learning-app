@@ -128,7 +128,7 @@ const consonants = {
 export default function PhoneticsPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // 使用浏览器语音合成服务（英式播音口音）
+  // 使用浏览器语音合成服务（美式英语）
   const speakText = (text: string) => {
     if (isSpeaking || !('speechSynthesis' in window)) return;
 
@@ -136,8 +136,8 @@ export default function PhoneticsPage() {
       setIsSpeaking(true);
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-GB';
-      utterance.rate = 0.8;
+      utterance.lang = 'en-US';
+      utterance.rate = 0.7;
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);

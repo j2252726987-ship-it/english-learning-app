@@ -20,7 +20,7 @@ export default function DialoguesPage() {
 
   const currentDialogue = filteredDialogues[activeDialogue];
 
-  // 使用浏览器语音合成服务（英式播音口音）
+  // 使用浏览器语音合成服务（美式英语）
   const speakText = async (text: string, speaker: 'A' | 'B') => {
     if (isSpeaking || !('speechSynthesis' in window)) return;
 
@@ -28,14 +28,14 @@ export default function DialoguesPage() {
       setIsSpeaking(true);
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-GB';
-      utterance.rate = 0.9;
+      utterance.lang = 'en-US';
+      utterance.rate = 0.7;
 
       // 获取可用的语音列表
       const voices = window.speechSynthesis.getVoices();
 
-      // 尝试找到英式英语的语音，并区分男女声
-      const englishVoices = voices.filter(voice => voice.lang === 'en-GB');
+      // 尝试找到美式英语的语音，并区分男女声
+      const englishVoices = voices.filter(voice => voice.lang === 'en-US');
 
       if (englishVoices.length > 0) {
         // 尝试区分性别（根据语音名称判断）
@@ -58,7 +58,7 @@ export default function DialoguesPage() {
           if (femaleVoice) utterance.voice = femaleVoice;
         }
 
-        // 如果没找到特定的性别语音，使用第一个英式语音
+        // 如果没找到特定的性别语音，使用第一个美式语音
         if (!utterance.voice) {
           utterance.voice = englishVoices[0];
         }
