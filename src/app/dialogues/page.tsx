@@ -20,55 +20,52 @@ export default function DialoguesPage() {
 
   const currentDialogue = filteredDialogues[activeDialogue];
 
-  const speak = (text: string, speaker: 'A' | 'B') => {
-    if ('speechSynthesis' in window) {
-      // 停止当前正在播放的语音
-      window.speechSynthesis.cancel();
+  // 使用豆包语音合成服务
+  const speakText = async (text: string, speaker: 'A' | 'B') => {
+    if (isSpeaking) return;
 
+    try {
       setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
 
-      // 设置语言
-      utterance.lang = 'en-US';
+      // 根据说话人选择声音
+      // A（男声）：使用云洲男声 - 通用男性声音，适合对话
+      // B（女声）：使用 Vivi 女声 - 中英文都支持，声音自然流畅
+      const speakerId = speaker === 'A' 
+        ? 'zh_male_m191_uranus_bigtts'  // 云洲男声
+        : 'zh_female_vv_uranus_bigtts'; // Vivi 女声
 
-      // 设置语速
-      utterance.rate = 0.7;
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speakerId,
+          speechRate: -5, // 对话语速稍快一点，更自然
+          loudnessRate: 10
+        }),
+      });
 
-      // 根据说话人设置性别
-      const voices = window.speechSynthesis.getVoices();
-      let selectedVoice: SpeechSynthesisVoice | null = null;
-
-      // 尝试找男性声音（A使用男性声音）
-      if (speaker === 'A') {
-        selectedVoice = voices.find(voice =>
-          voice.lang.includes('en') &&
-          (voice.name.includes('Male') || voice.name.includes('David') || voice.name.includes('Alex'))
-        ) || voices.find(voice => voice.lang.includes('en-US')) || voices[0];
-      } else {
-        // 尝试找女性声音（B使用女性声音）
-        selectedVoice = voices.find(voice =>
-          voice.lang.includes('en') &&
-          (voice.name.includes('Female') || voice.name.includes('Samantha') || voice.name.includes('Victoria'))
-        ) || voices.find(voice => voice.lang.includes('en-US')) || voices[0];
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
       }
 
-      if (selectedVoice) {
-        utterance.voice = selectedVoice;
-      }
+      const data = await response.json();
 
-      // 设置音调：男声较低，女声较高
-      utterance.pitch = speaker === 'A' ? 0.8 : 1.2;
-
-      utterance.onend = () => {
-        setIsSpeaking(false);
-      };
-
-      utterance.onerror = () => {
-        setIsSpeaking(false);
-      };
-
-      window.speechSynthesis.speak(utterance);
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
+    } catch (error) {
+      console.error('Speech error:', error);
+      setIsSpeaking(false);
     }
+  };
+
+  const speak = (text: string, speaker: 'A' | 'B') => {
+    speakText(text, speaker);
   };
 
   const goToPrevious = () => {
@@ -84,10 +81,7 @@ export default function DialoguesPage() {
     setActiveDialogue(0);
   };
 
-  // 确保语音列表已加载
-  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-    window.speechSynthesis.getVoices();
-  }
+  // 使用豆包语音合成服务
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
