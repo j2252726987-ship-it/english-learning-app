@@ -53,6 +53,37 @@ export default function LettersPage() {
     }
   };
 
+  const speakAlphabet = (char: string) => {
+    if ('speechSynthesis' in window) {
+      setIsSpeaking(true);
+
+      // 获取所有可用的语音
+      const voices = window.speechSynthesis.getVoices();
+
+      // 尝试找到英语语音
+      const englishVoice = voices.find(voice =>
+        voice.lang.includes('en') && !voice.lang.includes('GB')
+      );
+
+      const utterance = new SpeechSynthesisUtterance(char);
+      utterance.lang = 'en-US';
+
+      // 如果找到了英语语音，使用它
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+
+      // 设置语速和音调，确保字母发音清晰
+      utterance.rate = 0.6; // 更慢的语速
+      utterance.pitch = 1.0;
+
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? letters.length - 1 : prev - 1));
   };
@@ -83,7 +114,7 @@ export default function LettersPage() {
                 size="lg"
                 variant="outline"
                 className="rounded-full"
-                onClick={() => speakLetter(currentLetter.char)}
+                onClick={() => speakAlphabet(currentLetter.char)}
                 disabled={isSpeaking}
               >
                 <Volume2 className="h-8 w-8" />
