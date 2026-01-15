@@ -87,9 +87,19 @@ export default function PhoneticsPage() {
   const renderPhoneticCard = (item: any, index: number) => (
     <Card key={index} className="hover:shadow-xl transition-shadow">
       <CardHeader className="pb-3">
-        <CardTitle className="text-3xl font-bold text-center text-primary">
-          {item.symbol}
-        </CardTitle>
+        <div className="flex items-center justify-center gap-3">
+          <CardTitle className="text-3xl font-bold text-primary">
+            {item.symbol}
+          </CardTitle>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => speak(item.example)}
+            disabled={isSpeaking}
+          >
+            <Volume2 className="h-4 w-4" />
+          </Button>
+        </div>
         <CardDescription className="text-center text-sm">
           {item.description}
         </CardDescription>

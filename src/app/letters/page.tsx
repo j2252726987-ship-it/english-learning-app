@@ -7,32 +7,32 @@ import { Volume2, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const letters = [
-  { char: 'A', phonetic: '/eɪ/', example: 'Apple', exampleCn: '苹果', exampleWord: 'apple' },
-  { char: 'B', phonetic: '/biː/', example: 'Ball', exampleCn: '球', exampleWord: 'ball' },
-  { char: 'C', phonetic: '/siː/', example: 'Cat', exampleCn: '猫', exampleWord: 'cat' },
-  { char: 'D', phonetic: '/diː/', example: 'Dog', exampleCn: '狗', exampleWord: 'dog' },
-  { char: 'E', phonetic: '/iː/', example: 'Egg', exampleCn: '鸡蛋', exampleWord: 'egg' },
-  { char: 'F', phonetic: '/ef/', example: 'Fish', exampleCn: '鱼', exampleWord: 'fish' },
-  { char: 'G', phonetic: '/dʒiː/', example: 'Goat', exampleCn: '山羊', exampleWord: 'goat' },
-  { char: 'H', phonetic: '/eɪtʃ/', example: 'Hat', exampleCn: '帽子', exampleWord: 'hat' },
-  { char: 'I', phonetic: '/aɪ/', example: 'Ice', exampleCn: '冰', exampleWord: 'ice' },
-  { char: 'J', phonetic: '/dʒeɪ/', example: 'Juice', exampleCn: '果汁', exampleWord: 'juice' },
-  { char: 'K', phonetic: '/keɪ/', example: 'Key', exampleCn: '钥匙', exampleWord: 'key' },
-  { char: 'L', phonetic: '/el/', example: 'Lion', exampleCn: '狮子', exampleWord: 'lion' },
-  { char: 'M', phonetic: '/em/', example: 'Moon', exampleCn: '月亮', exampleWord: 'moon' },
-  { char: 'N', phonetic: '/en/', example: 'Nose', exampleCn: '鼻子', exampleWord: 'nose' },
-  { char: 'O', phonetic: '/əʊ/', example: 'Orange', exampleCn: '橙子', exampleWord: 'orange' },
-  { char: 'P', phonetic: '/piː/', example: 'Pig', exampleCn: '猪', exampleWord: 'pig' },
-  { char: 'Q', phonetic: '/kjuː/', example: 'Queen', exampleCn: '女王', exampleWord: 'queen' },
-  { char: 'R', phonetic: '/ɑːr/', example: 'Rabbit', exampleCn: '兔子', exampleWord: 'rabbit' },
-  { char: 'S', phonetic: '/es/', example: 'Sun', exampleCn: '太阳', exampleWord: 'sun' },
-  { char: 'T', phonetic: '/tiː/', example: 'Tree', exampleCn: '树', exampleWord: 'tree' },
-  { char: 'U', phonetic: '/juː/', example: 'Umbrella', exampleCn: '雨伞', exampleWord: 'umbrella' },
-  { char: 'V', phonetic: '/viː/', example: 'Violin', exampleCn: '小提琴', exampleWord: 'violin' },
-  { char: 'W', phonetic: '/ˈdʌbəl.juː/', example: 'Water', exampleCn: '水', exampleWord: 'water' },
-  { char: 'X', phonetic: '/eks/', example: 'X-ray', exampleCn: 'X光', exampleWord: 'x-ray' },
-  { char: 'Y', phonetic: '/waɪ/', example: 'Yellow', exampleCn: '黄色', exampleWord: 'yellow' },
-  { char: 'Z', phonetic: '/ziː/', example: 'Zebra', exampleCn: '斑马', exampleWord: 'zebra' },
+  { char: 'A', phonetic: '/eɪ/', example: 'Apple', exampleCn: '苹果', exampleWord: 'apple', letterSound: 'A' },
+  { char: 'B', phonetic: '/biː/', example: 'Ball', exampleCn: '球', exampleWord: 'ball', letterSound: 'B' },
+  { char: 'C', phonetic: '/siː/', example: 'Cat', exampleCn: '猫', exampleWord: 'cat', letterSound: 'C' },
+  { char: 'D', phonetic: '/diː/', example: 'Dog', exampleCn: '狗', exampleWord: 'dog', letterSound: 'D' },
+  { char: 'E', phonetic: '/iː/', example: 'Egg', exampleCn: '鸡蛋', exampleWord: 'egg', letterSound: 'E' },
+  { char: 'F', phonetic: '/ef/', example: 'Fish', exampleCn: '鱼', exampleWord: 'fish', letterSound: 'F' },
+  { char: 'G', phonetic: '/dʒiː/', example: 'Goat', exampleCn: '山羊', exampleWord: 'goat', letterSound: 'G' },
+  { char: 'H', phonetic: '/eɪtʃ/', example: 'Hat', exampleCn: '帽子', exampleWord: 'hat', letterSound: 'H' },
+  { char: 'I', phonetic: '/aɪ/', example: 'Ice', exampleCn: '冰', exampleWord: 'ice', letterSound: 'I' },
+  { char: 'J', phonetic: '/dʒeɪ/', example: 'Juice', exampleCn: '果汁', exampleWord: 'juice', letterSound: 'J' },
+  { char: 'K', phonetic: '/keɪ/', example: 'Key', exampleCn: '钥匙', exampleWord: 'key', letterSound: 'K' },
+  { char: 'L', phonetic: '/el/', example: 'Lion', exampleCn: '狮子', exampleWord: 'lion', letterSound: 'L' },
+  { char: 'M', phonetic: '/em/', example: 'Moon', exampleCn: '月亮', exampleWord: 'moon', letterSound: 'M' },
+  { char: 'N', phonetic: '/en/', example: 'Nose', exampleCn: '鼻子', exampleWord: 'nose', letterSound: 'N' },
+  { char: 'O', phonetic: '/əʊ/', example: 'Orange', exampleCn: '橙子', exampleWord: 'orange', letterSound: 'O' },
+  { char: 'P', phonetic: '/piː/', example: 'Pig', exampleCn: '猪', exampleWord: 'pig', letterSound: 'P' },
+  { char: 'Q', phonetic: '/kjuː/', example: 'Queen', exampleCn: '女王', exampleWord: 'queen', letterSound: 'Q' },
+  { char: 'R', phonetic: '/ɑːr/', example: 'Rabbit', exampleCn: '兔子', exampleWord: 'rabbit', letterSound: 'R' },
+  { char: 'S', phonetic: '/es/', example: 'Sun', exampleCn: '太阳', exampleWord: 'sun', letterSound: 'S' },
+  { char: 'T', phonetic: '/tiː/', example: 'Tree', exampleCn: '树', exampleWord: 'tree', letterSound: 'T' },
+  { char: 'U', phonetic: '/juː/', example: 'Umbrella', exampleCn: '雨伞', exampleWord: 'umbrella', letterSound: 'U' },
+  { char: 'V', phonetic: '/viː/', example: 'Violin', exampleCn: '小提琴', exampleWord: 'violin', letterSound: 'V' },
+  { char: 'W', phonetic: '/ˈdʌbəl.juː/', example: 'Water', exampleCn: '水', exampleWord: 'water', letterSound: 'W' },
+  { char: 'X', phonetic: '/eks/', example: 'X-ray', exampleCn: 'X光', exampleWord: 'x-ray', letterSound: 'X' },
+  { char: 'Y', phonetic: '/waɪ/', example: 'Yellow', exampleCn: '黄色', exampleWord: 'yellow', letterSound: 'Y' },
+  { char: 'Z', phonetic: '/ziː/', example: 'Zebra', exampleCn: '斑马', exampleWord: 'zebra', letterSound: 'Z' },
 ];
 
 export default function LettersPage() {
@@ -75,11 +75,32 @@ export default function LettersPage() {
         {/* Letter Card */}
         <Card className="mb-6 shadow-2xl border-2">
           <CardHeader className="text-center">
-            <CardTitle className="text-8xl md:text-9xl font-bold text-primary mb-4">
-              {currentLetter.char}
-            </CardTitle>
-            <div className="text-3xl font-semibold text-muted-foreground mb-2">
-              {currentLetter.phonetic}
+            <div className="flex items-center justify-center gap-6 mb-4">
+              <CardTitle className="text-8xl md:text-9xl font-bold text-primary">
+                {currentLetter.char}
+              </CardTitle>
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full"
+                onClick={() => speakLetter(currentLetter.char)}
+                disabled={isSpeaking}
+              >
+                <Volume2 className="h-8 w-8" />
+              </Button>
+            </div>
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <div className="text-3xl font-semibold text-muted-foreground">
+                {currentLetter.phonetic}
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => speakLetter(currentLetter.exampleWord)}
+                disabled={isSpeaking}
+              >
+                <Volume2 className="h-5 w-5" />
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
