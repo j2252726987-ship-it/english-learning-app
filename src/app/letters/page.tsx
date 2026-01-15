@@ -41,16 +41,45 @@ export default function LettersPage() {
 
   const currentLetter = letters[currentIndex];
 
-  const speakLetter = (text: string) => {
-    if ('speechSynthesis' in window) {
+  // 使用豆包语音合成服务
+  const speakText = async (text: string, speaker?: string) => {
+    if (isSpeaking) return;
+
+    try {
       setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.8;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
+          speechRate: -10, // 稍微慢一点，适合儿童学习
+          loudnessRate: 10
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
+    } catch (error) {
+      console.error('Speech error:', error);
+      setIsSpeaking(false);
     }
+  };
+
+  const speakLetter = (text: string) => {
+    speakText(text, 'zh_female_vv_uranus_bigtts');
   };
 
   // 字母发音映射表 - 直接使用字母的读音
@@ -84,22 +113,8 @@ export default function LettersPage() {
   };
 
   const speakAlphabet = (char: string) => {
-    if ('speechSynthesis' in window) {
-      setIsSpeaking(true);
-
-      // 使用字母发音映射表
-      const pronunciation = alphabetPronunciation[char] || char;
-
-      const utterance = new SpeechSynthesisUtterance(pronunciation);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.8;
-      utterance.pitch = 1.0;
-
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-
-      window.speechSynthesis.speak(utterance);
-    }
+    const pronunciation = alphabetPronunciation[char] || char;
+    speakText(pronunciation, 'zh_female_vv_uranus_bigtts');
   };
 
   const goToPrevious = () => {

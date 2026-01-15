@@ -128,38 +128,49 @@ const consonants = {
 export default function PhoneticsPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const speakPhoneticSound = (sound: string) => {
-    if ('speechSynthesis' in window) {
+  // 使用豆包语音合成服务
+  const speakText = async (text: string, speaker?: string) => {
+    if (isSpeaking) return;
+
+    try {
       setIsSpeaking(true);
 
-      // 播放音标本身的发音表示
-      const utterance = new SpeechSynthesisUtterance(sound);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
-      utterance.pitch = 1.0;
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
+          speechRate: -10, // 稍微慢一点，适合儿童学习
+          loudnessRate: 10
+        }),
+      });
 
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
 
-      window.speechSynthesis.speak(utterance);
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
+    } catch (error) {
+      console.error('Speech error:', error);
+      setIsSpeaking(false);
     }
   };
 
+  const speakPhoneticSound = (sound: string) => {
+    speakText(sound, 'zh_female_vv_uranus_bigtts');
+  };
+
   const speakPhonetic = (word: string) => {
-    if ('speechSynthesis' in window) {
-      setIsSpeaking(true);
-
-      // 播放示例单词，使用较慢的语速确保音标发音清晰
-      const utterance = new SpeechSynthesisUtterance(word);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7; // 更慢的语速，方便听清音标
-      utterance.pitch = 1.0;
-
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-
-      window.speechSynthesis.speak(utterance);
-    }
+    speakText(word, 'zh_female_vv_uranus_bigtts');
   };
 
   const speak = (text: string) => {
