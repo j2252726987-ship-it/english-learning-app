@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Volume2, User, Bot, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Volume2, User, Bot, ArrowLeft, ArrowRight, Gamepad2 } from 'lucide-react';
 import Link from 'next/link';
 import { dialogues, dialoguesByLevel, getLevelDescription } from '@/lib/dialogues-data';
 
@@ -91,7 +91,13 @@ export default function DialoguesPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
             对话练习
           </h1>
-          <p className="text-muted-foreground">情景对话练习（男女语音）</p>
+          <p className="text-muted-foreground mb-4">情景对话练习（男女语音）</p>
+          <Link href="/dialogues/game">
+            <Button size="lg" className="gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
+              <Gamepad2 className="h-5 w-5" />
+              开始闯关游戏
+            </Button>
+          </Link>
         </div>
 
         {/* Level Filter */}

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Volume2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Volume2, ArrowLeft, ArrowRight, Gamepad2 } from 'lucide-react';
 import Link from 'next/link';
 
 const letters = [
@@ -133,7 +133,13 @@ export default function LettersPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             字母学习
           </h1>
-          <p className="text-muted-foreground">点击喇叭图标听发音</p>
+          <p className="text-muted-foreground mb-4">点击喇叭图标听发音</p>
+          <Link href="/letters/game">
+            <Button size="lg" className="gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+              <Gamepad2 className="h-5 w-5" />
+              开始闯关游戏
+            </Button>
+          </Link>
         </div>
 
         {/* Letter Card */}
