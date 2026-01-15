@@ -53,13 +53,46 @@ export default function LettersPage() {
     }
   };
 
+  // 字母发音映射表 - 直接使用字母的读音
+  const alphabetPronunciation: { [key: string]: string } = {
+    'A': 'ay',
+    'B': 'bee',
+    'C': 'see',
+    'D': 'dee',
+    'E': 'ee',
+    'F': 'ef',
+    'G': 'jee',
+    'H': 'aych',
+    'I': 'eye',
+    'J': 'jay',
+    'K': 'kay',
+    'L': 'el',
+    'M': 'em',
+    'N': 'en',
+    'O': 'oh',
+    'P': 'pee',
+    'Q': 'cue',
+    'R': 'ar',
+    'S': 'ess',
+    'T': 'tee',
+    'U': 'you',
+    'V': 'vee',
+    'W': 'double-u',
+    'X': 'ex',
+    'Y': 'why',
+    'Z': 'zee',
+  };
+
   const speakAlphabet = (char: string) => {
     if ('speechSynthesis' in window) {
       setIsSpeaking(true);
 
-      const utterance = new SpeechSynthesisUtterance(char);
+      // 使用字母发音映射表
+      const pronunciation = alphabetPronunciation[char] || char;
+
+      const utterance = new SpeechSynthesisUtterance(pronunciation);
       utterance.lang = 'en-US';
-      utterance.rate = 0.7;
+      utterance.rate = 0.8;
       utterance.pitch = 1.0;
 
       utterance.onend = () => setIsSpeaking(false);
