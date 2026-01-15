@@ -26,19 +26,27 @@ export function VideoPlayerModal({
   videoUrl,
   description,
 }: VideoPlayerModalProps) {
-  const [isYouTube, setIsYouTube] = useState(false);
+  const [videoType, setVideoType] = useState<'youtube' | 'bilibili' | 'direct'>('direct');
   const [videoId, setVideoId] = useState('');
 
   useEffect(() => {
-    // 检查是否为YouTube链接并提取视频ID
-    if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
-      setIsYouTube(true);
+    // 检查视频类型并提取视频ID
+    if (videoUrl.includes('bilibili.com')) {
+      setVideoType('bilibili');
+      // 提取B站BV号
+      const match = videoUrl.match(/(BV\w+)/);
+      if (match) {
+        setVideoId(match[1]);
+      }
+    } else if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+      setVideoType('youtube');
+      // 提取YouTube视频ID
       const match = videoUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
       if (match) {
         setVideoId(match[1]);
       }
     } else {
-      setIsYouTube(false);
+      setVideoType('direct');
     }
   }, [videoUrl]);
 
@@ -65,7 +73,17 @@ export function VideoPlayerModal({
         </DialogHeader>
 
         <div className="relative w-full aspect-video bg-black">
-          {isYouTube ? (
+          {videoType === 'bilibili' ? (
+            <iframe
+              className="w-full h-full"
+              src={`https://player.bilibili.com/player.html?bvid=${videoId}&page=1&high_quality=1&danmaku=0&autoplay=1`}
+              title={title}
+              allowFullScreen
+              scrolling="no"
+              style={{ border: 'none' }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          ) : videoType === 'youtube' ? (
             <iframe
               className="w-full h-full"
               src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
