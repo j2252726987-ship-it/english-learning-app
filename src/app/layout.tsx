@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     '音标学习',
     '单词学习',
     '英语对话',
+    '英语动画',
   ],
   authors: [{ name: 'English Kids Team' }],
   openGraph: {

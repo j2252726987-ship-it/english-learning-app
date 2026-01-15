@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Volume2, ArrowLeft, ArrowRight, Gamepad2 } from 'lucide-react';
+import { Volume2, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const letters = [
@@ -41,19 +41,37 @@ export default function LettersPage() {
 
   const currentLetter = letters[currentIndex];
 
-  // 使用浏览器语音合成服务（美式英语）
-  const speakText = (text: string) => {
-    if (isSpeaking || !('speechSynthesis' in window)) return;
+  // 使用豆包语音合成服务
+  const speakText = async (text: string, speaker?: string) => {
+    if (isSpeaking) return;
 
     try {
       setIsSpeaking(true);
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
+          speechRate: -10, // 稍微慢一点，适合儿童学习
+          loudnessRate: 10
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
     } catch (error) {
       console.error('Speech error:', error);
       setIsSpeaking(false);
@@ -61,7 +79,7 @@ export default function LettersPage() {
   };
 
   const speakLetter = (text: string) => {
-    speakText(text);
+    speakText(text, 'zh_female_vv_uranus_bigtts');
   };
 
   // 字母发音映射表 - 直接使用字母的读音
@@ -96,7 +114,7 @@ export default function LettersPage() {
 
   const speakAlphabet = (char: string) => {
     const pronunciation = alphabetPronunciation[char] || char;
-    speakText(pronunciation);
+    speakText(pronunciation, 'zh_female_vv_uranus_bigtts');
   };
 
   const goToPrevious = () => {
@@ -115,13 +133,7 @@ export default function LettersPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             字母学习
           </h1>
-          <p className="text-muted-foreground mb-4">点击喇叭图标听发音</p>
-          <Link href="/letters/game">
-            <Button size="lg" className="gap-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-              <Gamepad2 className="h-5 w-5" />
-              开始闯关游戏
-            </Button>
-          </Link>
+          <p className="text-muted-foreground">点击喇叭图标听发音</p>
         </div>
 
         {/* Letter Card */}

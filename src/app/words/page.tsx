@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Volume2, ArrowLeft, ArrowRight, Search, BookOpen, Gamepad2 } from 'lucide-react';
+import { Volume2, ArrowLeft, ArrowRight, Search, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { categories as wordCategories } from '@/lib/words-data';
 
@@ -62,15 +62,9 @@ export default function WordsPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
             单词学习
           </h1>
-          <p className="text-muted-foreground mb-4">
+          <p className="text-muted-foreground">
             超过{totalWords}个单词，{wordCategories.length}个分类
           </p>
-          <Link href="/words/game">
-            <Button size="lg" className="gap-2 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600">
-              <Gamepad2 className="h-5 w-5" />
-              开始闯关游戏
-            </Button>
-          </Link>
         </div>
 
         {/* Search Bar */}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Volume2, Gamepad2 } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
 import Link from 'next/link';
 
 // 音标发音映射表 - 使用英语发音表示模拟音标发音
@@ -128,19 +128,37 @@ const consonants = {
 export default function PhoneticsPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  // 使用浏览器语音合成服务（美式英语）
-  const speakText = (text: string) => {
-    if (isSpeaking || !('speechSynthesis' in window)) return;
+  // 使用豆包语音合成服务
+  const speakText = async (text: string, speaker?: string) => {
+    if (isSpeaking) return;
 
     try {
       setIsSpeaking(true);
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
+          speechRate: -10, // 稍微慢一点，适合儿童学习
+          loudnessRate: 10
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
+      }
+
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
     } catch (error) {
       console.error('Speech error:', error);
       setIsSpeaking(false);
@@ -148,11 +166,11 @@ export default function PhoneticsPage() {
   };
 
   const speakPhoneticSound = (sound: string) => {
-    speakText(sound);
+    speakText(sound, 'zh_female_vv_uranus_bigtts');
   };
 
   const speakPhonetic = (word: string) => {
-    speakText(word);
+    speakText(word, 'zh_female_vv_uranus_bigtts');
   };
 
   const speak = (text: string) => {
@@ -209,16 +227,10 @@ export default function PhoneticsPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             音标学习
           </h1>
-          <p className="text-muted-foreground mb-2">48个国际音标，双喇叭系统</p>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-muted-foreground">48个国际音标，双喇叭系统</p>
+          <p className="text-sm text-muted-foreground mt-2">
             🔵 音标旁喇叭：播放音标本身的发音 | 🔵 示例词旁喇叭：播放完整单词发音
           </p>
-          <Link href="/phonetics/game">
-            <Button size="lg" className="gap-2 bg-gradient-to-r from-pink-500 to-orange-500 hover:from-pink-600 hover:to-orange-600">
-              <Gamepad2 className="h-5 w-5" />
-              开始闯关游戏
-            </Button>
-          </Link>
         </div>
 
         {/* Content */}

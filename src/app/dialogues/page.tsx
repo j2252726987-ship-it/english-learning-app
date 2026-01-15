@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Volume2, User, Bot, ArrowLeft, ArrowRight, Gamepad2 } from 'lucide-react';
+import { Volume2, User, Bot, ArrowLeft, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { dialogues, dialoguesByLevel, getLevelDescription } from '@/lib/dialogues-data';
 
@@ -20,53 +20,44 @@ export default function DialoguesPage() {
 
   const currentDialogue = filteredDialogues[activeDialogue];
 
-  // 使用浏览器语音合成服务（美式英语）
+  // 使用豆包语音合成服务
   const speakText = async (text: string, speaker: 'A' | 'B') => {
-    if (isSpeaking || !('speechSynthesis' in window)) return;
+    if (isSpeaking) return;
 
     try {
       setIsSpeaking(true);
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
+      // 根据说话人选择声音
+      // A（男声）：使用云洲男声 - 通用男性声音，适合对话
+      // B（女声）：使用 Vivi 女声 - 中英文都支持，声音自然流畅
+      const speakerId = speaker === 'A' 
+        ? 'zh_male_m191_uranus_bigtts'  // 云洲男声
+        : 'zh_female_vv_uranus_bigtts'; // Vivi 女声
 
-      // 获取可用的语音列表
-      const voices = window.speechSynthesis.getVoices();
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          speaker: speakerId,
+          speechRate: -5, // 对话语速稍快一点，更自然
+          loudnessRate: 10
+        }),
+      });
 
-      // 尝试找到美式英语的语音，并区分男女声
-      const englishVoices = voices.filter(voice => voice.lang === 'en-US');
-
-      if (englishVoices.length > 0) {
-        // 尝试区分性别（根据语音名称判断）
-        if (speaker === 'A') {
-          // 男声：尝试找包含 "Male" 或 "Daniel" 的语音
-          const maleVoice = englishVoices.find(v =>
-            v.name.toLowerCase().includes('male') ||
-            v.name.toLowerCase().includes('daniel') ||
-            v.name.toLowerCase().includes('george')
-          );
-          if (maleVoice) utterance.voice = maleVoice;
-        } else {
-          // 女声：尝试找包含 "Female" 或 "Victoria" 的语音
-          const femaleVoice = englishVoices.find(v =>
-            v.name.toLowerCase().includes('female') ||
-            v.name.toLowerCase().includes('victoria') ||
-            v.name.toLowerCase().includes('serena') ||
-            v.name.toLowerCase().includes('karen')
-          );
-          if (femaleVoice) utterance.voice = femaleVoice;
-        }
-
-        // 如果没找到特定的性别语音，使用第一个美式语音
-        if (!utterance.voice) {
-          utterance.voice = englishVoices[0];
-        }
+      if (!response.ok) {
+        throw new Error('Failed to generate speech');
       }
 
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+      const data = await response.json();
+
+      // 创建 Audio 对象播放音频
+      const audio = new Audio(data.audioUri);
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      audio.play();
     } catch (error) {
       console.error('Speech error:', error);
       setIsSpeaking(false);
@@ -100,13 +91,7 @@ export default function DialoguesPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
             对话练习
           </h1>
-          <p className="text-muted-foreground mb-4">情景对话练习（男女语音）</p>
-          <Link href="/dialogues/game">
-            <Button size="lg" className="gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
-              <Gamepad2 className="h-5 w-5" />
-              开始闯关游戏
-            </Button>
-          </Link>
+          <p className="text-muted-foreground">情景对话练习（男女语音）</p>
         </div>
 
         {/* Level Filter */}

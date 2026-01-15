@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Home, Type, Mic2, BookOpen, MessageSquare } from 'lucide-react';
+import { Sparkles, Home, Type, Mic2, BookOpen, MessageSquare, PlayCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { href: '/phonetics', label: '音标', icon: Mic2 },
   { href: '/words', label: '单词', icon: BookOpen },
   { href: '/dialogues', label: '对话', icon: MessageSquare },
+  { href: '/cartoons', label: '动画', icon: PlayCircle },
 ];
 
 export function Navigation() {
