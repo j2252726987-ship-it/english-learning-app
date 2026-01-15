@@ -79,7 +79,7 @@ export default function LettersPage() {
   };
 
   const speakLetter = (text: string) => {
-    speakText(text, 'zh_female_vv_uranus_bigtts');
+    speakText(text, 'zh_female_xueayi_saturn_bigtts'); // 雪姨女声 - 儿童有声书专用
   };
 
   // 字母发音映射表 - 直接使用字母的读音
@@ -114,7 +114,7 @@ export default function LettersPage() {
 
   const speakAlphabet = (char: string) => {
     const pronunciation = alphabetPronunciation[char] || char;
-    speakText(pronunciation, 'zh_female_vv_uranus_bigtts');
+    speakText(pronunciation, 'zh_female_xueayi_saturn_bigtts'); // 雪姨女声 - 儿童有声书专用
   };
 
   const goToPrevious = () => {

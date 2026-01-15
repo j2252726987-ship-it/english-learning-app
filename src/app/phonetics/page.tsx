@@ -166,11 +166,11 @@ export default function PhoneticsPage() {
   };
 
   const speakPhoneticSound = (sound: string) => {
-    speakText(sound, 'zh_female_vv_uranus_bigtts');
+    speakText(sound, 'zh_female_xueayi_saturn_bigtts'); // 雪姨女声 - 儿童有声书专用
   };
 
   const speakPhonetic = (word: string) => {
-    speakText(word, 'zh_female_vv_uranus_bigtts');
+    speakText(word, 'zh_female_xueayi_saturn_bigtts'); // 雪姨女声 - 儿童有声书专用
   };
 
   const speak = (text: string) => {

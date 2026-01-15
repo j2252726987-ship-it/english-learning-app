@@ -29,10 +29,10 @@ export default function DialoguesPage() {
 
       // 根据说话人选择声音
       // A（男声）：使用云洲男声 - 通用男性声音，适合对话
-      // B（女声）：使用 Vivi 女声 - 中英文都支持，声音自然流畅
-      const speakerId = speaker === 'A' 
-        ? 'zh_male_m191_uranus_bigtts'  // 云洲男声
-        : 'zh_female_vv_uranus_bigtts'; // Vivi 女声
+      // B（女声）：使用雪姨女声 - 儿童有声书专用，声音温柔好听
+      const speakerId = speaker === 'A'
+        ? 'zh_male_m191_uranus_bigtts'           // 云洲男声
+        : 'zh_female_xueayi_saturn_bigtts';     // 雪姨女声 - 儿童有声书专用
 
       const response = await fetch('/api/tts', {
         method: 'POST',
