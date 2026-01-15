@@ -13,6 +13,7 @@ export default function WordsPage() {
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showPhonetic, setShowPhonetic] = useState(true);
 
   const currentCategory = wordCategories[activeCategory];
   const currentWord = currentCategory.words[activeWordIndex];
@@ -111,8 +112,15 @@ export default function WordsPage() {
             <CardTitle className="text-5xl font-bold text-primary mb-2">
               {currentWord.word}
             </CardTitle>
-            <p className="text-2xl text-muted-foreground">{currentWord.cn}</p>
-            <p className="text-sm text-muted-foreground mt-2">
+            {showPhonetic && currentWord.ipa && (
+              <p className="text-xl text-muted-foreground font-mono mb-2">
+                {currentWord.ipa}
+              </p>
+            )}
+            <p className={`text-2xl text-muted-foreground ${!showPhonetic || !currentWord.ipa ? '' : 'mb-2'}`}>
+              {currentWord.cn}
+            </p>
+            <p className="text-sm text-muted-foreground">
               {activeWordIndex + 1} / {currentCategory.words.length}
             </p>
           </CardHeader>
@@ -179,10 +187,19 @@ export default function WordsPage() {
                 <span className="text-2xl">{currentCategory.icon}</span>
                 <span>{currentCategory.name} - 所有单词 ({currentCategory.words.length})</span>
               </div>
-              <Button variant="outline" size="sm" className="gap-2">
-                <BookOpen className="h-4 w-4" />
-                学习进度
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={showPhonetic ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowPhonetic(!showPhonetic)}
+                >
+                  {showPhonetic ? "隐藏音标" : "显示音标"}
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  学习进度
+                </Button>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -198,8 +215,13 @@ export default function WordsPage() {
                   >
                     <CardContent className="p-4 text-center">
                       <div className="text-3xl mb-2">{word.emoji}</div>
-                      <p className="font-semibold text-sm truncate">{word.word}</p>
-                      <p className="text-xs text-muted-foreground truncate">{word.cn}</p>
+                      <div className="font-bold text-sm mb-1">{word.word}</div>
+                      {showPhonetic && word.ipa && (
+                        <div className="text-xs text-muted-foreground font-mono mb-1">
+                          {word.ipa}
+                        </div>
+                      )}
+                      <div className="text-xs text-muted-foreground">{word.cn}</div>
                     </CardContent>
                   </Card>
                 ))}
