@@ -55,7 +55,7 @@ export default function LettersPage() {
         },
         body: JSON.stringify({
           text,
-          speaker: speaker || 'zh_female_mizai_saturn_bigtts', // 米才女声 - 专业播音员级别
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
           speechRate: -10, // 稍微慢一点，适合儿童学习
           loudnessRate: 10
         }),
@@ -79,7 +79,7 @@ export default function LettersPage() {
   };
 
   const speakLetter = (text: string) => {
-    speakText(text, 'zh_female_mizai_saturn_bigtts'); // 米才女声 - 专业播音员级别，清晰主播级
+    speakText(text, 'zh_female_vv_uranus_bigtts');
   };
 
   // 字母发音映射表 - 直接使用字母的读音
@@ -114,7 +114,7 @@ export default function LettersPage() {
 
   const speakAlphabet = (char: string) => {
     const pronunciation = alphabetPronunciation[char] || char;
-    speakText(pronunciation, 'zh_female_mizai_saturn_bigtts'); // 米才女声 - 专业播音员级别，清晰主播级
+    speakText(pronunciation, 'zh_female_vv_uranus_bigtts');
   };
 
   const goToPrevious = () => {

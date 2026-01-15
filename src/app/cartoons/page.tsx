@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { VideoPlayerModal } from '@/components/video-player-modal';
 
 const cartoons = [
-  // 热门动画片（使用真实可访问的英语学习视频）
+  // 热门动画片（使用可访问的英语学习视频）
   {
     id: 1,
     title: '字母歌 - ABC学习',
@@ -21,7 +21,7 @@ const cartoons = [
     iconColor: 'bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300',
     tags: ['字母', '歌曲', '入门'],
     thumbnail: '🎵',
-    videoUrl: 'https://www.bilibili.com/video/BV1Wt4y1X7dP'
+    videoUrl: 'https://www.bilibili.com/video/BV1xW4y1n7yT'
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const cartoons = [
     iconColor: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
     tags: ['动物', '单词', '认知'],
     thumbnail: '🐕',
-    videoUrl: 'https://www.bilibili.com/video/BV1gT4y1h7qD'
+    videoUrl: 'https://www.bilibili.com/video/BV1uJ41157Rm'
   },
   {
     id: 3,
@@ -47,7 +47,7 @@ const cartoons = [
     iconColor: 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300',
     tags: ['颜色', '单词', '视觉'],
     thumbnail: '🚓',
-    videoUrl: 'https://www.bilibili.com/video/BV1eT4y1h7hM'
+    videoUrl: 'https://www.bilibili.com/video/BV1nJ41157oM'
   },
   {
     id: 4,
@@ -60,7 +60,7 @@ const cartoons = [
     iconColor: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300',
     tags: ['数字', '数数', '入门'],
     thumbnail: '🐨',
-    videoUrl: 'https://www.bilibili.com/video/BV1vT4y1h7iB'
+    videoUrl: 'https://www.bilibili.com/video/BV1QJ41157gW'
   },
   {
     id: 5,
@@ -73,7 +73,7 @@ const cartoons = [
     iconColor: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300',
     tags: ['家庭', '单词', '日常'],
     thumbnail: '🐭',
-    videoUrl: 'https://www.bilibili.com/video/BV1wT4y1h7pS'
+    videoUrl: 'https://www.bilibili.com/video/BV1jJ41157eJ'
   },
   {
     id: 6,
@@ -86,7 +86,7 @@ const cartoons = [
     iconColor: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-300',
     tags: ['水果', '单词', '生活'],
     thumbnail: '✈️',
-    videoUrl: 'https://www.bilibili.com/video/BV1xT4y1h7qB'
+    videoUrl: 'https://www.bilibili.com/video/BV1kJ41157fX'
   },
   {
     id: 7,
@@ -99,7 +99,7 @@ const cartoons = [
     iconColor: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300',
     tags: ['身体', '单词', '认知'],
     thumbnail: '🐥',
-    videoUrl: 'https://www.bilibili.com/video/BV1yT4y1h7rD'
+    videoUrl: 'https://www.bilibili.com/video/BV1yJ41157hA'
   },
   {
     id: 8,
@@ -112,7 +112,7 @@ const cartoons = [
     iconColor: 'bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300',
     tags: ['天气', '单词', '自然'],
     thumbnail: '🍯',
-    videoUrl: 'https://www.bilibili.com/video/BV1zT4y1h7sH'
+    videoUrl: 'https://www.bilibili.com/video/BV1xJ41157kG'
   },
 
   // 教育动画
@@ -127,7 +127,7 @@ const cartoons = [
     iconColor: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
     tags: ['音标', '拼读', '发音'],
     thumbnail: '🎵',
-    videoUrl: 'https://www.bilibili.com/video/BV1GT4y1h7tM'
+    videoUrl: 'https://www.bilibili.com/video/BV1GJ41157mK'
   },
   {
     id: 10,
@@ -140,7 +140,7 @@ const cartoons = [
     iconColor: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300',
     tags: ['对话', '日常', '实用'],
     thumbnail: '🦁',
-    videoUrl: 'https://www.bilibili.com/video/BV1KT4y1h7uB'
+    videoUrl: 'https://www.bilibili.com/video/BV1hJ41157nR'
   },
   {
     id: 11,
@@ -153,7 +153,7 @@ const cartoons = [
     iconColor: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300',
     tags: ['对话', '礼貌', '入门'],
     thumbnail: '🌈',
-    videoUrl: 'https://www.bilibili.com/video/BV1LT4y1h7vC'
+    videoUrl: 'https://www.bilibili.com/video/BV1KJ41157pC'
   },
   {
     id: 12,
@@ -166,7 +166,7 @@ const cartoons = [
     iconColor: 'bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300',
     tags: ['形状', '单词', '认知'],
     thumbnail: '🔢',
-    videoUrl: 'https://www.bilibili.com/video/BV1MT4y1h7wP'
+    videoUrl: 'https://www.bilibili.com/video/BV1TJ41157qY'
   },
   {
     id: 13,
@@ -179,7 +179,7 @@ const cartoons = [
     iconColor: 'bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-300',
     tags: ['交通', '单词', '生活'],
     thumbnail: '🎤',
-    videoUrl: 'https://www.bilibili.com/video/BV1NT4y1h7xD'
+    videoUrl: 'https://www.bilibili.com/video/BV1MJ41157rP'
   },
   {
     id: 14,
@@ -192,7 +192,7 @@ const cartoons = [
     iconColor: 'bg-cyan-100 dark:bg-cyan-900 text-cyan-600 dark:text-cyan-300',
     tags: ['衣物', '单词', '日常'],
     thumbnail: '💬',
-    videoUrl: 'https://www.bilibili.com/video/BV1OT4y1h7yF'
+    videoUrl: 'https://www.bilibili.com/video/BV1QJ41157sB'
   },
   {
     id: 15,
@@ -205,7 +205,7 @@ const cartoons = [
     iconColor: 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300',
     tags: ['食物', '单词', '生活'],
     thumbnail: '🍎',
-    videoUrl: 'https://www.bilibili.com/video/BV1PT4y1h7zG'
+    videoUrl: 'https://www.bilibili.com/video/BV1xJ41157tL'
   },
   {
     id: 16,
@@ -218,7 +218,7 @@ const cartoons = [
     iconColor: 'bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300',
     tags: ['学习', '单词', '学校'],
     thumbnail: '👨‍👩‍👧‍👦',
-    videoUrl: 'https://www.bilibili.com/video/BV1QT4y1h70H'
+    videoUrl: 'https://www.bilibili.com/video/BV1GJ41157uN'
   },
   {
     id: 17,
@@ -231,7 +231,7 @@ const cartoons = [
     iconColor: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-300',
     tags: ['职业', '单词', '社会'],
     thumbnail: '🌤️',
-    videoUrl: 'https://www.bilibili.com/video/BV1RT4y1h71J'
+    videoUrl: 'https://www.bilibili.com/video/BV1MJ41157vQ'
   },
   {
     id: 18,
@@ -244,7 +244,7 @@ const cartoons = [
     iconColor: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300',
     tags: ['对话', '实用', '场景'],
     thumbnail: '👋',
-    videoUrl: 'https://www.bilibili.com/video/BV1ST4y1h72K'
+    videoUrl: 'https://www.bilibili.com/video/BV1yJ41157wS'
   },
   {
     id: 19,
@@ -257,7 +257,7 @@ const cartoons = [
     iconColor: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-300',
     tags: ['对话', '购物', '实用'],
     thumbnail: '👤',
-    videoUrl: 'https://www.bilibili.com/video/BV1TT4y1h73L'
+    videoUrl: 'https://www.bilibili.com/video/BV1KJ41157xY'
   },
   {
     id: 20,
@@ -270,7 +270,7 @@ const cartoons = [
     iconColor: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-300',
     tags: ['对话', '礼貌', '基础'],
     thumbnail: '📚',
-    videoUrl: 'https://www.bilibili.com/video/BV1UT4y1h74M'
+    videoUrl: 'https://www.bilibili.com/video/BV1hJ41157yD'
   },
 ];
 

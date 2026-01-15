@@ -142,7 +142,7 @@ export default function PhoneticsPage() {
         },
         body: JSON.stringify({
           text,
-          speaker: speaker || 'zh_female_mizai_saturn_bigtts', // 米才女声 - 专业播音员级别
+          speaker: speaker || 'zh_female_vv_uranus_bigtts',
           speechRate: -10, // 稍微慢一点，适合儿童学习
           loudnessRate: 10
         }),
@@ -166,11 +166,11 @@ export default function PhoneticsPage() {
   };
 
   const speakPhoneticSound = (sound: string) => {
-    speakText(sound, 'zh_female_mizai_saturn_bigtts'); // 米才女声 - 专业播音员级别，清晰主播级
+    speakText(sound, 'zh_female_vv_uranus_bigtts');
   };
 
   const speakPhonetic = (word: string) => {
-    speakText(word, 'zh_female_mizai_saturn_bigtts'); // 米才女声 - 专业播音员级别，清晰主播级
+    speakText(word, 'zh_female_vv_uranus_bigtts');
   };
 
   const speak = (text: string) => {

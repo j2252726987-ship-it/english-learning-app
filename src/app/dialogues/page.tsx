@@ -28,11 +28,11 @@ export default function DialoguesPage() {
       setIsSpeaking(true);
 
       // 根据说话人选择声音
-      // A（男声）：使用大艺男声 - 专业播音员级别，浑厚自然流畅
-      // B（女声）：使用米才女声 - 专业播音员级别，清晰专业主播级
-      const speakerId = speaker === 'A'
-        ? 'zh_male_dayi_saturn_bigtts'          // 大艺男声 - 专业播音员级别，浑厚自然流畅
-        : 'zh_female_mizai_saturn_bigtts';      // 米才女声 - 专业播音员级别，清晰专业主播级
+      // A（男声）：使用云洲男声 - 通用男性声音，适合对话
+      // B（女声）：使用 Vivi 女声 - 中英文都支持，声音自然流畅
+      const speakerId = speaker === 'A' 
+        ? 'zh_male_m191_uranus_bigtts'  // 云洲男声
+        : 'zh_female_vv_uranus_bigtts'; // Vivi 女声
 
       const response = await fetch('/api/tts', {
         method: 'POST',
