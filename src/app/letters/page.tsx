@@ -153,18 +153,10 @@ export default function LettersPage() {
                 <Volume2 className="h-8 w-8" />
               </Button>
             </div>
-            <div className="flex items-center justify-center gap-4 mb-2">
+            <div className="flex items-center justify-center mb-2">
               <div className="text-3xl font-semibold text-muted-foreground">
                 {currentLetter.phonetic}
               </div>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => speakLetter(currentLetter.exampleWord)}
-                disabled={isSpeaking}
-              >
-                <Volume2 className="h-5 w-5" />
-              </Button>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
