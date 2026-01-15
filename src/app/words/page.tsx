@@ -30,7 +30,7 @@ export default function WordsPage() {
   // Calculate total words
   const totalWords = wordCategories.reduce((sum, cat) => sum + cat.words.length, 0);
 
-  // 使用豆包语音合成服务 - 雪姨女声（儿童有声书专用）
+  // 使用豆包语音合成服务 - 米才女声（专业播音员级别）
   const speak = async (text: string) => {
     if (isSpeaking) return;
 
@@ -44,7 +44,7 @@ export default function WordsPage() {
         },
         body: JSON.stringify({
           text,
-          speaker: 'zh_female_xueayi_saturn_bigtts', // 雪姨女声 - 儿童有声书专用，声音温柔好听
+          speaker: 'zh_female_mizai_saturn_bigtts', // 米才女声 - 专业播音员级别，清晰主播级
           speechRate: -10, // 慢速，适合儿童学习
           loudnessRate: 10
         }),
