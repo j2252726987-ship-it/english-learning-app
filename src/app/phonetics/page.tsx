@@ -72,16 +72,43 @@ const consonants = {
 export default function PhoneticsPage() {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const speak = (text: string) => {
+  const speakPhonetic = (word: string) => {
     if ('speechSynthesis' in window) {
       setIsSpeaking(true);
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-      window.speechSynthesis.speak(utterance);
+
+      // 播放示例单词两次，使用较慢的语速确保音标发音清晰
+      const utterance1 = new SpeechSynthesisUtterance(word);
+      utterance1.lang = 'en-US';
+      utterance1.rate = 0.6; // 更慢的语速，方便听清音标
+      utterance1.pitch = 1.0;
+
+      const utterance2 = new SpeechSynthesisUtterance(word);
+      utterance2.lang = 'en-US';
+      utterance2.rate = 0.6;
+      utterance2.pitch = 1.0;
+
+      let count = 0;
+      const checkEnd = () => {
+        count++;
+        if (count >= 2) {
+          setIsSpeaking(false);
+        }
+      };
+
+      utterance1.onend = checkEnd;
+      utterance1.onerror = checkEnd;
+      utterance2.onend = checkEnd;
+      utterance2.onerror = checkEnd;
+
+      window.speechSynthesis.speak(utterance1);
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance2);
+      }, 1000); // 间隔1秒播放第二次
     }
+  };
+
+  const speak = (text: string) => {
+    speakPhonetic(text);
   };
 
   const renderPhoneticCard = (item: any, index: number) => (
@@ -133,7 +160,8 @@ export default function PhoneticsPage() {
           <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             音标学习
           </h1>
-          <p className="text-muted-foreground">48个国际音标，标准发音</p>
+          <p className="text-muted-foreground">48个国际音标，点击喇叭听示例单词的标准发音</p>
+          <p className="text-sm text-muted-foreground mt-2">💡 音标发音通过示例单词体现，请仔细聆听</p>
         </div>
 
         {/* Content */}
