@@ -34,8 +34,8 @@ export default function WordsPage() {
     if ('speechSynthesis' in window) {
       setIsSpeaking(true);
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 0.7;
+      utterance.lang = 'en-GB';
+      utterance.rate = 0.8;
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);

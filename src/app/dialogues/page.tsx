@@ -20,44 +20,53 @@ export default function DialoguesPage() {
 
   const currentDialogue = filteredDialogues[activeDialogue];
 
-  // 使用豆包语音合成服务
+  // 使用浏览器语音合成服务（英式播音口音）
   const speakText = async (text: string, speaker: 'A' | 'B') => {
-    if (isSpeaking) return;
+    if (isSpeaking || !('speechSynthesis' in window)) return;
 
     try {
       setIsSpeaking(true);
 
-      // 根据说话人选择声音
-      // A（男声）：使用云洲男声 - 通用男性声音，适合对话
-      // B（女声）：使用 Vivi 女声 - 中英文都支持，声音自然流畅
-      const speakerId = speaker === 'A' 
-        ? 'zh_male_m191_uranus_bigtts'  // 云洲男声
-        : 'zh_female_vv_uranus_bigtts'; // Vivi 女声
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-GB';
+      utterance.rate = 0.9;
 
-      const response = await fetch('/api/tts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text,
-          speaker: speakerId,
-          speechRate: -5, // 对话语速稍快一点，更自然
-          loudnessRate: 10
-        }),
-      });
+      // 获取可用的语音列表
+      const voices = window.speechSynthesis.getVoices();
 
-      if (!response.ok) {
-        throw new Error('Failed to generate speech');
+      // 尝试找到英式英语的语音，并区分男女声
+      const englishVoices = voices.filter(voice => voice.lang === 'en-GB');
+
+      if (englishVoices.length > 0) {
+        // 尝试区分性别（根据语音名称判断）
+        if (speaker === 'A') {
+          // 男声：尝试找包含 "Male" 或 "Daniel" 的语音
+          const maleVoice = englishVoices.find(v =>
+            v.name.toLowerCase().includes('male') ||
+            v.name.toLowerCase().includes('daniel') ||
+            v.name.toLowerCase().includes('george')
+          );
+          if (maleVoice) utterance.voice = maleVoice;
+        } else {
+          // 女声：尝试找包含 "Female" 或 "Victoria" 的语音
+          const femaleVoice = englishVoices.find(v =>
+            v.name.toLowerCase().includes('female') ||
+            v.name.toLowerCase().includes('victoria') ||
+            v.name.toLowerCase().includes('serena') ||
+            v.name.toLowerCase().includes('karen')
+          );
+          if (femaleVoice) utterance.voice = femaleVoice;
+        }
+
+        // 如果没找到特定的性别语音，使用第一个英式语音
+        if (!utterance.voice) {
+          utterance.voice = englishVoices[0];
+        }
       }
 
-      const data = await response.json();
-
-      // 创建 Audio 对象播放音频
-      const audio = new Audio(data.audioUri);
-      audio.onended = () => setIsSpeaking(false);
-      audio.onerror = () => setIsSpeaking(false);
-      audio.play();
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
     } catch (error) {
       console.error('Speech error:', error);
       setIsSpeaking(false);
