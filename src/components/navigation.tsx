@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Home, Type, Mic2, BookOpen, MessageSquare, Trophy } from 'lucide-react';
+import { Sparkles, Home, Type, Mic2, BookOpen, MessageSquare, Trophy, Scroll } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
   { href: '/words', label: '单词', icon: BookOpen },
   { href: '/dialogues', label: '对话', icon: MessageSquare },
   { href: '/games', label: '闯关', icon: Trophy },
+  { href: '/poems', label: '美文', icon: Scroll },
 ];
 
 export function Navigation() {
