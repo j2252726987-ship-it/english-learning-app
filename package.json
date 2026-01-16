@@ -77,7 +77,8 @@
     "only-allow": "^1.2.2",
     "shadcn": "latest",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.59.2"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
