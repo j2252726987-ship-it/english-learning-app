@@ -4,21 +4,46 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Volume2, ArrowLeft, ArrowRight, Home, BookOpen, Sparkles } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Volume2, ArrowLeft, Home, BookOpen, Sparkles, Search, Filter, Music, Book } from 'lucide-react';
 import Link from 'next/link';
-import { poems, poemsByLevel, getLevelDescription } from '@/lib/poems-data';
+import { allContent, getContentByCategory, getLevelDescription, getCategoryDescription, type ContentItem } from '@/lib/poems-data';
 
 export default function PoemsPage() {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [selectedPoem, setSelectedPoem] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // 根据选择的难度筛选诗歌
-  const filteredPoems = selectedLevel
-    ? poems.filter(p => p.level === selectedLevel)
-    : poems;
+  // 根据选择筛选内容
+  const filteredContent = (() => {
+    let content = allContent;
 
-  const currentPoem = poems.find(p => p.id === selectedPoem);
+    // 搜索筛选
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      content = content.filter(item =>
+        item.title.toLowerCase().includes(query) ||
+        item.titleCn.includes(query) ||
+        item.tags.some(tag => tag.includes(query))
+      );
+    }
+
+    // 分类筛选
+    if (selectedCategory !== 'all') {
+      content = content.filter(item => item.category === selectedCategory);
+    }
+
+    // 难度筛选
+    if (selectedLevel) {
+      content = content.filter(item => item.level === selectedLevel);
+    }
+
+    return content;
+  })();
+
+  const currentItem = allContent.find(item => item.id === selectedItem);
 
   // 播放语音
   const speak = async (text: string) => {
@@ -35,7 +60,7 @@ export default function PoemsPage() {
         body: JSON.stringify({
           text,
           speaker: 'zh_female_vv_uranus_bigtts',
-          speechRate: -15, // 诗歌语速更慢
+          speechRate: -15,
           loudnessRate: 10
         }),
       });
@@ -57,28 +82,33 @@ export default function PoemsPage() {
     }
   };
 
-  const speakPoem = () => {
-    if (currentPoem) {
-      const text = currentPoem.content.join(' ');
+  const speakContent = () => {
+    if (currentItem) {
+      const text = currentItem.content.join(' ');
       speak(text);
     }
   };
 
   const handleLevelChange = (level: number | null) => {
     setSelectedLevel(level);
-    setSelectedPoem(null);
+    setSelectedItem(null);
   };
 
-  if (selectedPoem && currentPoem) {
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setSelectedItem(null);
+  };
+
+  if (selectedItem && currentItem) {
     return (
-      <div className={`min-h-screen bg-gradient-to-br ${currentPoem.bgGradient} dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8`}>
+      <div className={`min-h-screen bg-gradient-to-br ${currentItem.bgGradient} dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8`}>
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setSelectedPoem(null)}
+              onClick={() => setSelectedItem(null)}
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -94,30 +124,33 @@ export default function PoemsPage() {
             </Link>
           </div>
 
-          {/* Poem Card */}
+          {/* Content Card */}
           <Card className="shadow-2xl border-2 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80">
             <CardHeader className="text-center pb-4">
               <div className="text-6xl mb-4 animate-bounce">
-                {currentPoem.icon}
+                {currentItem.icon}
               </div>
-              <CardTitle className="text-3xl mb-2">{currentPoem.title}</CardTitle>
-              <p className="text-xl text-muted-foreground">{currentPoem.titleCn}</p>
-              <div className="flex items-center justify-center gap-2 mt-3">
+              <CardTitle className="text-3xl mb-2">{currentItem.title}</CardTitle>
+              <p className="text-xl text-muted-foreground">{currentItem.titleCn}</p>
+              <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
                 <Badge variant="outline" className="text-xs">
-                  {getLevelDescription(currentPoem.level)}
+                  {getLevelDescription(currentItem.level)}
                 </Badge>
-                {currentPoem.tags.map((tag, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs">
+                  {getCategoryDescription(currentItem.category)}
+                </Badge>
+                {currentItem.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
                     {tag}
                   </Badge>
                 ))}
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Poem Content */}
+              {/* Content */}
               <div className="bg-gradient-to-br from-white/50 to-white/30 dark:from-gray-800/50 dark:to-gray-800/30 rounded-xl p-8">
                 <div className="space-y-4 text-center">
-                  {currentPoem.content.map((line, index) => (
+                  {currentItem.content.map((line, index) => (
                     line === '' ? (
                       <div key={index} className="h-4" />
                     ) : (
@@ -135,7 +168,7 @@ export default function PoemsPage() {
                   size="lg"
                   variant="outline"
                   className="gap-2 rounded-full px-8"
-                  onClick={speakPoem}
+                  onClick={speakContent}
                   disabled={isSpeaking}
                 >
                   <Volume2 className={`h-6 w-6 ${isSpeaking ? 'animate-pulse' : ''}`} />
@@ -167,90 +200,168 @@ export default function PoemsPage() {
               </h1>
               <Sparkles className="h-8 w-8 text-pink-600" />
             </div>
-            <p className="text-muted-foreground">优美的诗歌，快乐的阅读</p>
+            <p className="text-muted-foreground">优美的诗歌、动听的儿歌、精彩的故事</p>
+            <Badge variant="secondary" className="mt-2">
+              共 {allContent.length} 篇内容
+            </Badge>
           </div>
           <div className="w-10" />
         </div>
 
-        {/* Level Filter */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
-          <Button
-            variant={selectedLevel === null ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => handleLevelChange(null)}
-            className="gap-2"
-          >
-            <span>📚</span>
-            全部 ({poems.length})
-          </Button>
-          {[1, 2, 3, 4, 5].map((level) => (
-            <Button
-              key={level}
-              variant={selectedLevel === level ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => handleLevelChange(level)}
-              className="gap-2"
-            >
-              <span>
-                {level === 1 && '🌱'}
-                {level === 2 && '🌿'}
-                {level === 3 && '🌳'}
-                {level === 4 && '🌲'}
-                {level === 5 && '🏔️'}
-              </span>
-              {getLevelDescription(level)} ({poemsByLevel[level as keyof typeof poemsByLevel]?.length || 0})
-            </Button>
-          ))}
-        </div>
+        {/* Search and Filter Section */}
+        <Card className="mb-8 shadow-lg">
+          <CardContent className="pt-6">
+            {/* Search Bar */}
+            <div className="relative mb-6">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder="搜索标题、中文或标签..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-12 text-base"
+              />
+            </div>
 
-        {/* Poems Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredPoems.map((poem) => (
-            <Card
-              key={poem.id}
-              className={`group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer border-2 hover:border-primary/50 bg-gradient-to-br ${poem.bgGradient}`}
-              onClick={() => setSelectedPoem(poem.id)}
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-5xl group-hover:scale-110 transition-transform">
-                    {poem.icon}
-                  </div>
-                  <Badge variant="outline" className="text-xs bg-white/50">
-                    {getLevelDescription(poem.level)}
-                  </Badge>
-                </div>
-                <CardTitle className="text-xl mb-1">{poem.title}</CardTitle>
-                <p className="text-sm text-muted-foreground">{poem.titleCn}</p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-3 max-h-32 overflow-hidden">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-                      {poem.content.slice(0, 3).join(' ')}...
-                    </p>
+            {/* Category Filter */}
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Filter className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">分类筛选</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleCategoryChange('all')}
+                  className="gap-2"
+                >
+                  <span>📚</span>
+                  全部 ({allContent.length})
+                </Button>
+                <Button
+                  variant={selectedCategory === 'poem' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleCategoryChange('poem')}
+                  className="gap-2"
+                >
+                  <span>📜</span>
+                  诗歌 ({getContentByCategory('poem').length})
+                </Button>
+                <Button
+                  variant={selectedCategory === 'song' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleCategoryChange('song')}
+                  className="gap-2"
+                >
+                  <Music className="h-4 w-4" />
+                  儿歌 ({getContentByCategory('song').length})
+                </Button>
+                <Button
+                  variant={selectedCategory === 'story' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleCategoryChange('story')}
+                  className="gap-2"
+                >
+                  <Book className="h-4 w-4" />
+                  故事 ({getContentByCategory('story').length})
+                </Button>
+              </div>
+            </div>
+
+            {/* Level Filter */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Filter className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium">难度筛选</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant={selectedLevel === null ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleLevelChange(null)}
+                  className="gap-2"
+                >
+                  <span>📊</span>
+                  全部
+                </Button>
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <Button
+                    key={level}
+                    variant={selectedLevel === level ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleLevelChange(level)}
+                    className="gap-2"
+                  >
+                    <span>
+                      {level === 1 && '🌱'}
+                      {level === 2 && '🌿'}
+                      {level === 3 && '🌳'}
+                      {level === 4 && '🌲'}
+                      {level === 5 && '🏔️'}
+                    </span>
+                    {getLevelDescription(level)}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Content Grid */}
+        {filteredContent.length === 0 ? (
+          <Card className="text-center py-12">
+            <CardContent>
+              <p className="text-xl text-muted-foreground">没有找到相关内容</p>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('all');
+                  setSelectedLevel(null);
+                }}
+                className="mt-4"
+              >
+                清除筛选
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredContent.map((item) => (
+              <Card
+                key={item.id}
+                className="hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-105 overflow-hidden"
+                onClick={() => setSelectedItem(item.id)}
+              >
+                <CardHeader className={`bg-gradient-to-br ${item.bgGradient} pb-3`}>
+                  <div className="text-5xl mb-2">{item.icon}</div>
+                  <CardTitle className="text-xl line-clamp-1">{item.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground line-clamp-1">{item.titleCn}</p>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    <Badge variant="outline" className="text-xs">
+                      {getLevelDescription(item.level)}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs">
+                      {getCategoryDescription(item.category)}
+                    </Badge>
                   </div>
                   <div className="flex flex-wrap gap-1">
-                    {poem.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs bg-white/50">
+                    {item.tags.slice(0, 2).map((tag, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
                         {tag}
                       </Badge>
                     ))}
+                    {item.tags.length > 2 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{item.tags.length - 2}
+                      </Badge>
+                    )}
                   </div>
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700" variant="default">
-                    阅读全文
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {filteredPoems.length === 0 && (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">📭</div>
-            <p className="text-xl text-muted-foreground">暂无该难度的美文</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         )}
       </div>

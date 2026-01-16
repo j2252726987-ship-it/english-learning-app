@@ -1,3 +1,6 @@
+import { songs, type Song } from './songs-data';
+import { stories, type Story } from './stories-data';
+
 export interface Poem {
   id: string;
   title: string;
@@ -5,11 +8,13 @@ export interface Poem {
   content: string[];
   author?: string;
   level: number; // 1-5 难度级别
-  category: 'poem' | 'story' | 'prose';
+  category: 'poem' | 'story' | 'song' | 'prose';
   tags: string[];
   bgGradient: string;
   icon: string;
 }
+
+export type ContentItem = Poem | Song | Story;
 
 export const poems: Poem[] = [
   {
@@ -198,33 +203,33 @@ export const poems: Poem[] = [
       'Listen to the wind blow soft and low,',
       'Hear the river gently flow.',
       'Watch the flowers bloom in spring,',
-      'Hear the happy birds sing.',
+      'Hear the robins joyfully sing.',
       '',
-      'Nature is a beautiful thing,',
-      'To us it makes us want to sing.',
-      'Love the earth and all its grace,',
-      'In every happy place.'
+      'Feel the rain upon your face,',
+      'Find a peaceful, happy place.',
+      'Nature\'s beauty all around,',
+      'Every sight and every sound.'
     ],
-    level: 3,
+    level: 2,
     category: 'poem',
-    tags: ['自然', '环保', '诗歌'],
+    tags: ['自然', '音乐', '和谐'],
     bgGradient: 'from-green-100 via-teal-100 to-cyan-100',
     icon: '🌿'
   },
   {
     id: 'friendship',
-    title: 'A Friend Like You',
-    titleCn: '像你这样的朋友',
+    title: 'Friendship',
+    titleCn: '友谊',
     content: [
-      'A friend like you is hard to find,',
-      'You are gentle, you are kind.',
-      'You make me smile, you make me laugh,',
-      'You fill my heart with happy chaff.',
+      'A friend is someone who is always there,',
+      'To show you how much they really care.',
+      'They listen when you want to talk,',
+      'They help you when you want to walk.',
       '',
-      'Together we will play and learn,',
-      'Together we will grow and yearn.',
-      'For all the joy that friendship brings,',
-      'Like a bird with happy wings.'
+      'A friend is like a shining star,',
+      'No matter where you are, they\'re not far.',
+      'Their love is strong, their heart is true,',
+      'That\'s what a real friend means to you.'
     ],
     level: 2,
     category: 'poem',
@@ -255,30 +260,60 @@ export const poems: Poem[] = [
   }
 ];
 
-// 按类别分组
-export const poemsByCategory = {
-  poem: poems.filter(p => p.category === 'poem'),
-  story: poems.filter(p => p.category === 'story'),
-  prose: poems.filter(p => p.category === 'prose')
+// 获取所有内容（诗歌、儿歌、故事）
+export const allContent: ContentItem[] = [
+  ...poems,
+  ...songs,
+  ...stories
+];
+
+// 根据分类获取内容
+export const getContentByCategory = (category: string): ContentItem[] => {
+  if (category === 'all') return allContent;
+  return allContent.filter(item => item.category === category);
 };
 
-// 按难度分组
-export const poemsByLevel = {
-  1: poems.filter(p => p.level === 1),
-  2: poems.filter(p => p.level === 2),
-  3: poems.filter(p => p.level === 3),
-  4: poems.filter(p => p.level === 4),
-  5: poems.filter(p => p.level === 5)
+// 根据难度获取内容
+export const getContentByLevel = (level: number): ContentItem[] => {
+  return allContent.filter(item => item.level === level);
 };
 
 // 获取难度描述
 export function getLevelDescription(level: number): string {
-  const descriptions: Record<number, string> = {
-    1: '入门',
-    2: '简单',
-    3: '中等',
-    4: '较难',
-    5: '困难'
+  const levels: Record<number, string> = {
+    1: '🌱 入门',
+    2: '🌿 初级',
+    3: '🌳 中级',
+    4: '🌲 高级',
+    5: '🏔️ 精通'
   };
-  return descriptions[level] || '未知';
+  return levels[level] || `Level ${level}`;
 }
+
+// 获取分类描述
+export function getCategoryDescription(category: string): string {
+  const categories: Record<string, string> = {
+    poem: '📜 诗歌',
+    song: '🎵 儿歌',
+    story: '📖 故事',
+    prose: '📝 散文'
+  };
+  return categories[category] || category;
+}
+
+// 按难度分组
+export const contentByLevel = {
+  1: getContentByLevel(1),
+  2: getContentByLevel(2),
+  3: getContentByLevel(3),
+  4: getContentByLevel(4),
+  5: getContentByLevel(5)
+};
+
+// 按分类分组
+export const contentByCategory = {
+  poem: getContentByCategory('poem'),
+  song: getContentByCategory('song'),
+  story: getContentByCategory('story'),
+  prose: getContentByCategory('prose')
+};
