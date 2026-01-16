@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm install && pnpm run build",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "regions": ["hkg1"],
+  "env": {
+    "NODE_VERSION": "20"
+  }
+}
